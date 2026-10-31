@@ -62,6 +62,8 @@ app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/plans', require('./routes/planRoutes'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
+app.use('/api/quotations', require('./routes/quotationRoutes'));
+app.use('/api/quotation-templates', require('./routes/quotationTemplateRoutes'));
 app.use('/api/customer-portal', require('./routes/customerPortalRoutes'));
 app.use('/api/reports', require('./routes/reportsRoutes'));
 

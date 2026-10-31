@@ -7,6 +7,8 @@ const Invoice = require('./models/Invoice');
 const Payment = require('./models/Payment');
 const Activity = require('./models/Activity');
 const Plan = require('./models/Plan');
+const Quotation = require('./models/Quotation');
+const QuotationTemplate = require('./models/QuotationTemplate');
 
 dotenv.config();
 
@@ -15,15 +17,9 @@ const seedDB = async () => {
     await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/subscription_management');
     console.log('[Seed] Connected to MongoDB for Module 3 Seed');
 
-    // 1. Clean existing records
-    await User.deleteMany({});
-    await Product.deleteMany({});
-    await Subscription.deleteMany({});
-    await Invoice.deleteMany({});
-    await Payment.deleteMany({});
-    await Activity.deleteMany({});
-    await Plan.deleteMany({});
-    console.log('[Seed] Cleaned existing collections');
+    // 1. Clean existing records and drop obsolete indexes
+    await mongoose.connection.db.dropDatabase();
+    console.log('[Seed] Cleaned existing collections & dropped stale indexes');
 
     // 2. Create Users (Admin, Staff, and multiple Customers)
     const admin = await User.create({
@@ -780,8 +776,370 @@ const seedDB = async () => {
     }
     console.log('[Seed] Seeded Activities');
 
+    // 8. Module 5: Quotation Templates
+    const tplEnterprise = await QuotationTemplate.create({
+      name: 'Standard Enterprise Cloud Offer',
+      description: 'Standard enterprise onboarding package with Cloud CRM Suite and Business Software.',
+      selectedProducts: [
+        {
+          product: prodCloudCRM._id,
+          defaultQuantity: 2,
+          unitPrice: 3500,
+          defaultTaxRate: 18,
+          defaultDiscount: 5
+        },
+        {
+          product: prodBusinessSoftware._id,
+          defaultQuantity: 1,
+          unitPrice: 2000,
+          defaultTaxRate: 18,
+          defaultDiscount: 0
+        }
+      ],
+      selectedPlans: [
+        {
+          plan: planEnterpriseCloud._id,
+          defaultQuantity: 1,
+          unitPrice: 2560,
+          billingFrequency: 'Monthly',
+          defaultTaxRate: 18,
+          defaultDiscount: 0
+        }
+      ],
+      defaultQuantities: 1,
+      defaultTaxes: 18,
+      validityDuration: 30,
+      paymentTerms: 'Net 30',
+      termsAndConditions: '1. Quotation is valid for 30 calendar days from issue date.\n2. Invoices are payable under Net 30 terms.\n3. GST applicable at 18%.',
+      isActive: true,
+      createdBy: admin._id
+    });
+
+    const tplApiDev = await QuotationTemplate.create({
+      name: 'Developer API & Gateway Bundle',
+      description: 'High-throughput developer plan with dedicated API Gateway units.',
+      selectedProducts: [
+        {
+          product: prodAPIGateway._id,
+          defaultQuantity: 5,
+          unitPrice: 280,
+          defaultTaxRate: 18,
+          defaultDiscount: 10
+        }
+      ],
+      selectedPlans: [
+        {
+          plan: planAPIDaily._id,
+          defaultQuantity: 5,
+          unitPrice: 280,
+          billingFrequency: 'Daily',
+          defaultTaxRate: 18,
+          defaultDiscount: 10
+        }
+      ],
+      defaultQuantities: 5,
+      defaultTaxes: 18,
+      validityDuration: 15,
+      paymentTerms: 'Net 15',
+      termsAndConditions: '1. Quotation valid for 15 days.\n2. Payment due within 15 days of confirmation.\n3. Dedicated API keys issued upon settlement.',
+      isActive: true,
+      createdBy: staff1._id
+    });
+
+    const tplFastTrack = await QuotationTemplate.create({
+      name: 'Executive Fast-Track 7-Day Quote',
+      description: 'Rapid executive deployment with immediate payment terms.',
+      selectedProducts: [
+        {
+          product: prodCloudCRM._id,
+          defaultQuantity: 1,
+          unitPrice: 3500,
+          defaultTaxRate: 18,
+          defaultDiscount: 15
+        }
+      ],
+      selectedPlans: [],
+      defaultQuantities: 1,
+      defaultTaxes: 18,
+      validityDuration: 7,
+      paymentTerms: 'Immediate',
+      termsAndConditions: '1. Exclusive executive rate valid for 7 calendar days only.\n2. Immediate payment upon confirmation required.',
+      isActive: true,
+      createdBy: admin._id
+    });
+
+    console.log('[Seed] Seeded Quotation Templates');
+
+    // 9. Module 5: Quotations
+    // Quotation 1: Draft for customerPrimary
+    const qtnDraft = new Quotation({
+      quotationNumber: 'QTN-2026-0001',
+      customer: customerPrimary._id,
+      quotationTemplate: tplEnterprise._id,
+      products: [
+        {
+          product: prodCloudCRM._id,
+          name: prodCloudCRM.name,
+          variant: 'Standard',
+          quantity: 2,
+          unitPrice: 3500,
+          taxRate: 18,
+          discount: 10,
+          lineTotal: 6300
+        }
+      ],
+      plans: [
+        {
+          plan: planEnterpriseCloud._id,
+          name: planEnterpriseCloud.name,
+          billingFrequency: 'Monthly',
+          quantity: 1,
+          unitPrice: 2560,
+          taxRate: 18,
+          discount: 0,
+          lineTotal: 2560
+        }
+      ],
+      subtotal: 8860,
+      taxAmount: 1594.8,
+      discountAmount: 700,
+      totalAmount: 10454.8,
+      validityDuration: 30,
+      createdDate: new Date(),
+      expiryDate: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
+      paymentTerms: 'Net 30',
+      status: 'Draft',
+      notes: 'Initial enterprise quote draft prepared for Cooper Designs.',
+      createdBy: staff1._id,
+      history: [
+        {
+          action: 'Created',
+          performedBy: staff1._id,
+          performedByName: staff1.name,
+          timestamp: new Date(),
+          details: 'Draft quotation prepared from Standard Enterprise Cloud Offer template'
+        }
+      ]
+    });
+    await qtnDraft.save();
+
+    // Quotation 2: Open Quotation for custAcme
+    const qtnSent = new Quotation({
+      quotationNumber: 'QTN-2026-0002',
+      customer: custAcme._id,
+      quotationTemplate: tplEnterprise._id,
+      products: [
+        {
+          product: prodBusinessSoftware._id,
+          name: prodBusinessSoftware.name,
+          variant: 'Edition: Professional',
+          quantity: 1,
+          unitPrice: 2000,
+          taxRate: 18,
+          discount: 5,
+          lineTotal: 1900
+        }
+      ],
+      plans: [
+        {
+          plan: planEnterpriseCloud._id,
+          name: planEnterpriseCloud.name,
+          billingFrequency: 'Monthly',
+          quantity: 2,
+          unitPrice: 4600,
+          taxRate: 18,
+          discount: 10,
+          lineTotal: 8280
+        }
+      ],
+      subtotal: 10180,
+      taxAmount: 1832.4,
+      discountAmount: 1020,
+      totalAmount: 12012.4,
+      validityDuration: 20,
+      createdDate: new Date(),
+      expiryDate: new Date(now.getTime() + 20 * 24 * 60 * 60 * 1000),
+      paymentTerms: 'Net 30',
+      status: 'Quotation',
+      notes: 'Official quotation delivered to Acme Corp procurement desk.',
+      createdBy: admin._id,
+      history: [
+        {
+          action: 'Created',
+          performedBy: admin._id,
+          performedByName: admin.name,
+          timestamp: new Date(),
+          details: 'Quotation created'
+        },
+        {
+          action: 'Status changed to Quotation',
+          performedBy: admin._id,
+          performedByName: admin.name,
+          timestamp: new Date(),
+          details: 'Quotation sent to customer for review'
+        }
+      ]
+    });
+    await qtnSent.save();
+
+    // Quotation 3: Confirmed for custNexus (Ready to convert to subscription)
+    const qtnConfirmed = new Quotation({
+      quotationNumber: 'QTN-2026-0003',
+      customer: custNexus._id,
+      quotationTemplate: tplApiDev._id,
+      products: [],
+      plans: [
+        {
+          plan: planAPIDaily._id,
+          name: planAPIDaily.name,
+          billingFrequency: 'Daily',
+          quantity: 5,
+          unitPrice: 280,
+          taxRate: 18,
+          discount: 5,
+          lineTotal: 1330
+        }
+      ],
+      subtotal: 1330,
+      taxAmount: 239.4,
+      discountAmount: 70,
+      totalAmount: 1569.4,
+      validityDuration: 15,
+      createdDate: new Date(),
+      expiryDate: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
+      paymentTerms: 'Net 15',
+      status: 'Confirmed',
+      notes: 'Customer accepted terms. Ready for automated subscription provisioning.',
+      createdBy: staff1._id,
+      history: [
+        {
+          action: 'Created',
+          performedBy: staff1._id,
+          performedByName: staff1.name,
+          timestamp: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
+          details: 'Quotation prepared'
+        },
+        {
+          action: 'Status changed to Confirmed',
+          performedBy: staff1._id,
+          performedByName: staff1.name,
+          timestamp: new Date(),
+          details: 'Customer signed offer'
+        }
+      ]
+    });
+    await qtnConfirmed.save();
+
+    // Quotation 4: EXPIRED Quotation (To test requirement #6: prevent confirmation)
+    const qtnExpired = new Quotation({
+      quotationNumber: 'QTN-2026-0004',
+      customer: customerPrimary._id,
+      products: [
+        {
+          product: prodBusinessSoftware._id,
+          name: prodBusinessSoftware.name,
+          quantity: 1,
+          unitPrice: 2000,
+          taxRate: 18,
+          discount: 0,
+          lineTotal: 2000
+        }
+      ],
+      plans: [],
+      subtotal: 2000,
+      taxAmount: 360,
+      discountAmount: 0,
+      totalAmount: 2360,
+      validityDuration: 10,
+      createdDate: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000),
+      expiryDate: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000), // 15 days ago expired!
+      paymentTerms: 'Immediate',
+      status: 'Quotation',
+      notes: 'Expired promotional quote. System must block confirmation unless validity is extended.',
+      createdBy: staff1._id,
+      history: [
+        {
+          action: 'Created',
+          performedBy: staff1._id,
+          performedByName: staff1.name,
+          timestamp: new Date(now.getTime() - 25 * 24 * 60 * 60 * 1000),
+          details: 'Promotional offer created'
+        }
+      ]
+    });
+    // Bypass pre-save recalculation overwriting the explicit past expiryDate
+    await Quotation.collection.insertOne(qtnExpired.toObject());
+
+    // Quotation 5: Converted to Active Subscription
+    const qtnActive = new Quotation({
+      quotationNumber: 'QTN-2026-0005',
+      customer: customerPrimary._id,
+      products: [
+        {
+          product: prodBusinessSoftware._id,
+          name: prodBusinessSoftware.name,
+          variant: 'Brand: Odoo',
+          quantity: 1,
+          unitPrice: 2560,
+          taxRate: 18,
+          discount: 0,
+          lineTotal: 2560
+        }
+      ],
+      plans: [
+        {
+          plan: planEnterpriseCloud._id,
+          name: planEnterpriseCloud.name,
+          billingFrequency: 'Monthly',
+          quantity: 1,
+          unitPrice: 2560,
+          taxRate: 18,
+          discount: 0,
+          lineTotal: 2560
+        }
+      ],
+      subtotal: 5120,
+      taxAmount: 921.6,
+      discountAmount: 0,
+      totalAmount: 6041.6,
+      validityDuration: 30,
+      createdDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
+      expiryDate: new Date(now.getTime() + 20 * 24 * 60 * 60 * 1000),
+      paymentTerms: 'Net 30',
+      status: 'Active',
+      subscriptionId: subPrimary._id,
+      notes: 'Successfully confirmed and provisioned into live subscription.',
+      createdBy: admin._id,
+      history: [
+        {
+          action: 'Created',
+          performedBy: admin._id,
+          performedByName: admin.name,
+          timestamp: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
+          details: 'Quotation generated'
+        },
+        {
+          action: 'Status changed to Confirmed',
+          performedBy: admin._id,
+          performedByName: admin.name,
+          timestamp: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000),
+          details: 'Offer confirmed by customer'
+        },
+        {
+          action: 'Converted to Subscription',
+          performedBy: admin._id,
+          performedByName: admin.name,
+          timestamp: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000),
+          details: `Provisioned into active subscription #${subPrimary._id}`
+        }
+      ]
+    });
+    await qtnActive.save();
+
+    console.log('[Seed] Seeded 5 Module 5 Quotations (Draft, Quotation, Confirmed, Expired, Active)');
+
     console.log('====================================================');
-    console.log('[Seed] Database successfully seeded for Module 3!');
+    console.log('[Seed] Database successfully seeded for Module 5!');
     console.log('====================================================');
     process.exit(0);
   } catch (error) {
