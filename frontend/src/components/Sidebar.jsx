@@ -35,10 +35,11 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     if (role === 'admin') {
       return [
         { label: 'Overview', to: '/admin/dashboard', icon: LayoutDashboard },
+        { label: 'Subscription Plans', to: '/plans', icon: Sparkles, badge: 'Plans' },
         { label: 'Products & Variants', to: '/products', icon: Package, badge: 'Manage' },
+        { label: 'Subscriptions Oversight', to: '/admin/subscriptions', icon: Layers },
         { label: 'Staff Management', to: '/admin/staff', icon: UserPlus, badge: 'Admin Only' },
         { label: 'User Directory', to: '/admin/users', icon: Users },
-        { label: 'Subscriptions Oversight', to: '/admin/subscriptions', icon: Layers },
         { label: 'Audit Logs', to: '/admin/audit', icon: ClipboardList },
         { label: 'Payments & Receipts', to: '/payments', icon: CreditCard }
       ];
@@ -47,9 +48,10 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     if (role === 'staff') {
       return [
         { label: 'Operations Desk', to: '/staff/dashboard', icon: LayoutDashboard },
+        { label: 'Subscription Plans', to: '/plans', icon: Sparkles, badge: 'View' },
         { label: 'Products Catalog', to: '/products', icon: Package, badge: 'View Only' },
-        { label: 'Subscribers', to: '/staff/subscribers', icon: Users },
         { label: 'Active Subscriptions', to: '/staff/subscriptions', icon: Layers },
+        { label: 'Subscribers', to: '/staff/subscribers', icon: Users },
         { label: 'Support Queue', to: '/staff/support', icon: Headphones, badge: 'Daily Ops' },
         { label: 'Payments & Receipts', to: '/payments', icon: CreditCard }
       ];
@@ -58,6 +60,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     // Customer
     return [
       { label: 'My Portal', to: '/customer/dashboard', icon: LayoutDashboard },
+      { label: 'Browse Plans', to: '/plans', icon: Sparkles, badge: 'Subscribe' },
       { label: 'My Subscriptions', to: '/customer/subscriptions', icon: Layers },
       { label: 'Invoices & Receipts', to: '/customer/invoices', icon: Receipt },
       { label: 'Payment Methods', to: '/customer/payments', icon: CreditCard }

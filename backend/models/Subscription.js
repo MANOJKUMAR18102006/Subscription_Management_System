@@ -16,16 +16,39 @@ const subscriptionSchema = new mongoose.Schema(
       optionValue: String,
       additionalPrice: { type: Number, default: 0 }
     },
+    planId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Plan'
+    },
     planName: {
       type: String,
       required: [true, 'Plan name is required'],
-      trim: true,
-      enum: ['Starter Plan', 'Growth Tier', 'Professional Suite', 'Enterprise Pro']
+      trim: true
+    },
+    // Requirement 2: Quantity support
+    quantity: {
+      type: Number,
+      default: 1,
+      min: [1, 'Quantity must be at least 1']
+    },
+    // Requirement 7: Agreed unit price locked at signup
+    unitPrice: {
+      type: Number,
+      default: 0,
+      min: [0, 'Unit price cannot be negative']
+    },
+    priceLockedAt: {
+      type: Date,
+      default: Date.now
+    },
+    // Billing frequency / cycle
+    billingFrequency: {
+      type: String,
+      enum: ['Daily', 'Weekly', 'Monthly', 'Yearly', 'daily', 'weekly', 'monthly', 'yearly'],
+      default: 'Monthly'
     },
     billingCycle: {
       type: String,
-      required: true,
-      enum: ['monthly', 'yearly'],
       default: 'monthly'
     },
     amount: {
@@ -35,14 +58,47 @@ const subscriptionSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      default: 'USD',
+      default: 'INR',
       uppercase: true
+    },
+    currencySymbol: {
+      type: String,
+      default: '₹'
     },
     status: {
       type: String,
       required: true,
-      enum: ['active', 'past_due', 'canceled', 'trialing', 'expired'],
+      enum: ['active', 'past_due', 'canceled', 'trialing', 'expired', 'paused', 'closed'],
       default: 'active'
+    },
+    // Requirement 5 & 7: Frozen snapshot of the plan terms, pricing & rules at subscription time
+    planSnapshot: {
+      planId: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' },
+      name: String,
+      price: Number,
+      billingFrequency: String,
+      minQuantity: Number,
+      allowEarlyClosure: Boolean,
+      allowPause: Boolean,
+      allowRenewal: Boolean,
+      currency: String,
+      currencySymbol: String,
+      features: [String],
+      linkedProducts: Array
+    },
+    // Tracking pause and closure
+    pausedAt: {
+      type: Date
+    },
+    resumedAt: {
+      type: Date
+    },
+    closedAt: {
+      type: Date
+    },
+    closureReason: {
+      type: String,
+      trim: true
     },
     startDate: {
       type: Date,
@@ -68,10 +124,12 @@ const subscriptionSchema = new mongoose.Schema(
 
 // Indexes for faster aggregation queries
 subscriptionSchema.index({ customerId: 1, status: 1 });
+subscriptionSchema.index({ planId: 1, status: 1 });
 subscriptionSchema.index({ status: 1, createdAt: 1 });
 subscriptionSchema.index({ nextBillingDate: 1 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);
 
 module.exports = Subscription;
+
 

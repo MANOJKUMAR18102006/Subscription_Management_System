@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Subscription = require('../models/Subscription');
+const Plan = require('../models/Plan');
 
 /**
  * @desc    Create a new product
@@ -324,6 +325,22 @@ exports.deleteProduct = async (req, res, next) => {
         success: false,
         message: `Deletion Blocked: '${product.name}' is currently used in ${activeSubsCount} active subscription contract(s). To protect active customer agreements, this product cannot be deleted. You can safely archive it instead.`,
         activeSubscriptionsCount: activeSubsCount,
+        canArchive: true,
+        productId: product._id
+      });
+    }
+
+    // Check if product is linked to any active or draft Subscription Plans (Module 4 Integration)
+    const linkedPlansCount = await Plan.countDocuments({
+      'linkedProducts.product': product._id,
+      status: { $in: ['Active', 'Draft'] }
+    });
+
+    if (linkedPlansCount > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Deletion Blocked: '${product.name}' is currently linked to ${linkedPlansCount} subscription plan(s). Unlink or archive the plan(s) before deleting the product.`,
+        linkedPlansCount,
         canArchive: true,
         productId: product._id
       });

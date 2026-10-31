@@ -6,6 +6,7 @@ const Subscription = require('./models/Subscription');
 const Invoice = require('./models/Invoice');
 const Payment = require('./models/Payment');
 const Activity = require('./models/Activity');
+const Plan = require('./models/Plan');
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ const seedDB = async () => {
     await Invoice.deleteMany({});
     await Payment.deleteMany({});
     await Activity.deleteMany({});
+    await Plan.deleteMany({});
     console.log('[Seed] Cleaned existing collections');
 
     // 2. Create Users (Admin, Staff, and multiple Customers)
@@ -241,117 +243,393 @@ const seedDB = async () => {
 
     console.log('[Seed] Seeded 6 Products with Variant Options & Pricing Matrix');
 
-    // 4. Create Subscriptions (Linking with Products & Variants)
+    // 4. Create Subscription Plans (Module 4 Specification)
     const now = new Date();
 
-    // Primary customer subscription -> Linked to Business Software (Odoo variant: 2000 + 560 = 2560)
+    // Plan 1: Enterprise Cloud Suite (Multi-product bundle, Monthly, Auto-close enabled)
+    const planEnterpriseCloud = await Plan.create({
+      name: 'Enterprise Cloud Suite',
+      description: 'Comprehensive business suite bundling Cloud CRM and 24/7 Priority Support with multi-tenant isolation.',
+      linkedProducts: [
+        { product: prodCloudCRM._id, minQuantity: 1, isPrimary: true },
+        { product: prodSLAService._id, minQuantity: 1, isPrimary: false }
+      ],
+      billingFrequency: 'Monthly',
+      price: 4600,
+      currency: 'INR',
+      currencySymbol: '₹',
+      minQuantity: 1,
+      availableFrom: new Date(now.getFullYear(), now.getMonth() - 6, 1),
+      availableUntil: new Date(now.getFullYear() + 1, 11, 31),
+      autoClose: true,
+      allowEarlyClosure: true,
+      allowPause: true,
+      allowRenewal: true,
+      status: 'Active',
+      features: [
+        'Dedicated CRM Workspace',
+        '24/7 Dedicated Support',
+        'Multi-tenant Cloud Isolation',
+        'Unlimited Audit Retention'
+      ],
+      createdBy: admin._id
+    });
+
+    // Plan 2: Business Automation Annual (Yearly frequency, Minimum Quantity 2, Early Closure prohibited)
+    const planBusinessAnnual = await Plan.create({
+      name: 'Business Automation Annual',
+      description: 'Annual enterprise license for core business operations with multi-brand connectors. Requires min 2 licenses.',
+      linkedProducts: [
+        { product: prodBusinessSoftware._id, minQuantity: 2, isPrimary: true }
+      ],
+      billingFrequency: 'Yearly',
+      price: 32000,
+      currency: 'INR',
+      currencySymbol: '₹',
+      minQuantity: 2,
+      availableFrom: new Date(now.getFullYear(), 0, 1),
+      availableUntil: null, // Perpetual
+      autoClose: false,
+      allowEarlyClosure: false, // Early closure restricted by contract
+      allowPause: true,
+      allowRenewal: true,
+      status: 'Active',
+      features: [
+        'Full ERP Core Engine',
+        'Multi-Brand SAP/Odoo/Salesforce Connectors',
+        'Dedicated Account Director',
+        'Annual Rate Guarantee'
+      ],
+      createdBy: admin._id
+    });
+
+    // Plan 3: Developer API Gateway Pro (Daily billing frequency, Min quantity 5, Pause prohibited)
+    const planAPIDaily = await Plan.create({
+      name: 'Developer API Gateway Pro',
+      description: 'High-throughput microservices gateway billed daily for dynamic scaling. Minimum 5 seats.',
+      linkedProducts: [
+        { product: prodAPIGateway._id, minQuantity: 5, isPrimary: true }
+      ],
+      billingFrequency: 'Daily',
+      price: 200,
+      currency: 'INR',
+      currencySymbol: '₹',
+      minQuantity: 5,
+      availableFrom: new Date(now.getFullYear(), now.getMonth() - 2, 1),
+      availableUntil: new Date(now.getFullYear(), now.getMonth() + 6, 1),
+      autoClose: false,
+      allowEarlyClosure: true,
+      allowPause: false, // Pausing not allowed
+      allowRenewal: true,
+      status: 'Active',
+      features: [
+        '100k API Requests/day per unit',
+        'Sub-10ms Global Latency',
+        'Continuous Uptime Monitoring'
+      ],
+      createdBy: admin._id
+    });
+
+    // Plan 4: Operations Sprint Weekly (Weekly billing, Renewal prohibited)
+    const planWeeklySprint = await Plan.create({
+      name: 'Operations Sprint Weekly',
+      description: 'Accelerated 7-day engineering support sprint. One-time sprint cycle (no auto-renewal).',
+      linkedProducts: [
+        { product: prodSLAService._id, minQuantity: 1, isPrimary: true }
+      ],
+      billingFrequency: 'Weekly',
+      price: 750,
+      currency: 'INR',
+      currencySymbol: '₹',
+      minQuantity: 1,
+      availableFrom: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 14),
+      availableUntil: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 45),
+      autoClose: true,
+      allowEarlyClosure: true,
+      allowPause: true,
+      allowRenewal: false, // Renewal prohibited
+      status: 'Active',
+      features: [
+        'Weekly Rapid Architecture Reviews',
+        'Emergency 1-Hour SLA',
+        'Direct Slack / Teams Sync'
+      ],
+      createdBy: admin._id
+    });
+
+    // Plan 5: Legacy Q3 Flash Bundle (Expired with Auto Close = true -> Auto Closed Demonstration)
+    const planExpiredFlash = await Plan.create({
+      name: 'Q3 Early-Bird Flash Bundle',
+      description: 'Limited seasonal promotion for early adopters. Expired and automatically closed.',
+      linkedProducts: [
+        { product: prodCloudCRM._id, minQuantity: 1, isPrimary: true }
+      ],
+      billingFrequency: 'Monthly',
+      price: 1800,
+      currency: 'INR',
+      currencySymbol: '₹',
+      minQuantity: 1,
+      availableFrom: new Date(now.getFullYear(), now.getMonth() - 3, 1),
+      availableUntil: new Date(now.getFullYear(), now.getMonth() - 1, 1), // Past date!
+      autoClose: true,
+      allowEarlyClosure: true,
+      allowPause: true,
+      allowRenewal: true,
+      status: 'Closed',
+      features: [
+        'Discounted Early Access Rate',
+        'Standard Features'
+      ],
+      createdBy: admin._id
+    });
+
+    // Plan 6: Upcoming 2027 Vision Plan (Future Available From Date -> Scheduled Showcase)
+    const planScheduledFuture = await Plan.create({
+      name: 'Vision 2027 Enterprise Tier',
+      description: 'Pre-announced next-generation cloud subscription scheduled for future rollout.',
+      linkedProducts: [
+        { product: prodBusinessSoftware._id, minQuantity: 1, isPrimary: true },
+        { product: prodAPIGateway._id, minQuantity: 1, isPrimary: false }
+      ],
+      billingFrequency: 'Yearly',
+      price: 65000,
+      currency: 'INR',
+      currencySymbol: '₹',
+      minQuantity: 1,
+      availableFrom: new Date(now.getFullYear() + 1, 0, 1), // Future date!
+      availableUntil: new Date(now.getFullYear() + 2, 0, 1),
+      autoClose: true,
+      allowEarlyClosure: true,
+      allowPause: true,
+      allowRenewal: true,
+      status: 'Active',
+      features: [
+        'Quantum-Ready Encryption',
+        'AI Autonomous Agents Included'
+      ],
+      createdBy: admin._id
+    });
+
+    console.log('[Seed] Seeded 6 Subscription Plans with multi-products, billing frequencies, and auto-close');
+
+    // 5. Create Subscriptions (Linked to Plans & Products with Price Locking)
+
+    // Primary customer subscription -> Linked to Enterprise Cloud Suite
     const subPrimary = await Subscription.create({
       customerId: customerPrimary._id,
       productId: prodBusinessSoftware._id,
+      planId: planEnterpriseCloud._id,
+      planName: planEnterpriseCloud.name,
+      quantity: 1,
+      unitPrice: 2560,
+      priceLockedAt: new Date(now.getFullYear(), now.getMonth() - 3, 1),
+      billingFrequency: 'Monthly',
+      billingCycle: 'monthly',
+      amount: 2560,
+      currency: 'INR',
+      currencySymbol: '₹',
+      status: 'active',
+      planSnapshot: {
+        planId: planEnterpriseCloud._id,
+        name: planEnterpriseCloud.name,
+        price: 2560,
+        billingFrequency: 'Monthly',
+        minQuantity: 1,
+        allowEarlyClosure: true,
+        allowPause: true,
+        allowRenewal: true,
+        currency: 'INR',
+        currencySymbol: '₹',
+        features: planEnterpriseCloud.features
+      },
       selectedVariant: {
         variantName: 'Brand',
         optionValue: 'Odoo',
         additionalPrice: 560
       },
-      planName: 'Enterprise Pro',
-      billingCycle: 'monthly',
-      amount: 2560,
-      amountPaid: 2560,
-      balanceDue: 0,
-      currency: 'INR',
-      status: 'active',
       startDate: new Date(now.getFullYear(), now.getMonth() - 3, 1),
       nextBillingDate: new Date(now.getFullYear(), now.getMonth() + 1, 15),
       features: ['Unlimited Team Seats', 'Brand: Odoo Integration', '24/7 Priority SLA', 'Custom SSO']
     });
 
-    // Sub 2: Acme -> Linked to Cloud CRM Suite (Growth Tier: 3500 + 1100 = 4600)
+    // Sub 2: Acme -> Linked to Enterprise Cloud Suite
     const subAcme = await Subscription.create({
       customerId: custAcme._id,
       productId: prodCloudCRM._id,
+      planId: planEnterpriseCloud._id,
+      planName: planEnterpriseCloud.name,
+      quantity: 1,
+      unitPrice: 4600,
+      priceLockedAt: new Date(now.getFullYear(), now.getMonth() - 5, 10),
+      billingFrequency: 'Monthly',
+      billingCycle: 'monthly',
+      amount: 4600,
+      currency: 'INR',
+      currencySymbol: '₹',
+      status: 'active',
+      planSnapshot: {
+        planId: planEnterpriseCloud._id,
+        name: planEnterpriseCloud.name,
+        price: 4600,
+        billingFrequency: 'Monthly',
+        minQuantity: 1,
+        allowEarlyClosure: true,
+        allowPause: true,
+        allowRenewal: true,
+        currency: 'INR',
+        currencySymbol: '₹',
+        features: planEnterpriseCloud.features
+      },
       selectedVariant: {
         variantName: 'Tier',
         optionValue: 'Growth',
         additionalPrice: 1100
       },
-      planName: 'Professional Suite',
-      billingCycle: 'monthly',
-      amount: 4600,
-      currency: 'INR',
-      status: 'active',
       startDate: new Date(now.getFullYear(), now.getMonth() - 5, 10),
       nextBillingDate: new Date(now.getFullYear(), now.getMonth() + 1, 10),
       features: ['20 Team Seats', 'Cloud Storage: 250 GB', 'Advanced Reporting']
     });
 
-    // Sub 3: Nexus (Past Due Growth Tier)
+    // Sub 3: Nexus (Past Due Developer API Gateway Pro)
     const subNexus = await Subscription.create({
       customerId: custNexus._id,
       productId: prodAPIGateway._id,
+      planId: planAPIDaily._id,
+      planName: planAPIDaily.name,
+      quantity: 5,
+      unitPrice: 280,
+      priceLockedAt: new Date(now.getFullYear(), now.getMonth() - 2, 5),
+      billingFrequency: 'Daily',
+      billingCycle: 'daily',
+      amount: 1400,
+      currency: 'INR',
+      currencySymbol: '₹',
+      status: 'past_due',
+      planSnapshot: {
+        planId: planAPIDaily._id,
+        name: planAPIDaily.name,
+        price: 280,
+        billingFrequency: 'Daily',
+        minQuantity: 5,
+        allowEarlyClosure: true,
+        allowPause: false, // Pausing disabled!
+        allowRenewal: true,
+        currency: 'INR',
+        currencySymbol: '₹',
+        features: planAPIDaily.features
+      },
       selectedVariant: {
         variantName: 'Throughput',
         optionValue: '100k Requests/day',
         additionalPrice: 600
       },
-      planName: 'Growth Tier',
-      billingCycle: 'monthly',
-      amount: 1400,
-      currency: 'INR',
-      status: 'past_due',
       startDate: new Date(now.getFullYear(), now.getMonth() - 2, 5),
       nextBillingDate: new Date(now.getFullYear(), now.getMonth(), 5),
       features: ['10 Team Seats', '100k Requests/day']
     });
 
-    // Sub 4: Apex (Active Yearly Enterprise)
+    // Sub 4: Apex (Active Yearly Business Automation Annual - Early closure restricted!)
     const subApex = await Subscription.create({
       customerId: custApex._id,
       productId: prodBusinessSoftware._id,
+      planId: planBusinessAnnual._id,
+      planName: planBusinessAnnual.name,
+      quantity: 2,
+      unitPrice: 16000,
+      priceLockedAt: new Date(now.getFullYear(), 0, 15),
+      billingFrequency: 'Yearly',
+      billingCycle: 'yearly',
+      amount: 32000,
+      currency: 'INR',
+      currencySymbol: '₹',
+      status: 'active',
+      planSnapshot: {
+        planId: planBusinessAnnual._id,
+        name: planBusinessAnnual.name,
+        price: 16000,
+        billingFrequency: 'Yearly',
+        minQuantity: 2,
+        allowEarlyClosure: false, // Early closure prohibited!
+        allowPause: true,
+        allowRenewal: true,
+        currency: 'INR',
+        currencySymbol: '₹',
+        features: planBusinessAnnual.features
+      },
       selectedVariant: {
         variantName: 'Brand',
         optionValue: 'SAP',
         additionalPrice: 1200
       },
-      planName: 'Enterprise Pro',
-      billingCycle: 'yearly',
-      amount: 32000,
-      currency: 'INR',
-      status: 'active',
       startDate: new Date(now.getFullYear(), 0, 15),
       nextBillingDate: new Date(now.getFullYear() + 1, 0, 15),
       features: ['Unlimited Seats', 'Brand: SAP Core Engine', 'Dedicated Manager']
     });
 
-    // Sub 5: Vertex (Trialing Starter Plan)
+    // Sub 5: Vertex (Trialing)
     const subVertex = await Subscription.create({
       customerId: custVertex._id,
       productId: prodCloudCRM._id,
-      planName: 'Starter Plan',
+      planId: planEnterpriseCloud._id,
+      planName: planEnterpriseCloud.name,
+      quantity: 1,
+      unitPrice: 3500,
+      priceLockedAt: new Date(),
+      billingFrequency: 'Monthly',
       billingCycle: 'monthly',
       amount: 3500,
       currency: 'INR',
+      currencySymbol: '₹',
       status: 'trialing',
+      planSnapshot: {
+        planId: planEnterpriseCloud._id,
+        name: planEnterpriseCloud.name,
+        price: 3500,
+        billingFrequency: 'Monthly',
+        minQuantity: 1,
+        allowEarlyClosure: true,
+        allowPause: true,
+        allowRenewal: true,
+        currency: 'INR',
+        currencySymbol: '₹',
+        features: planEnterpriseCloud.features
+      },
       startDate: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 3),
       nextBillingDate: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 11),
       features: ['3 Team Seats', 'Core Features']
     });
 
-    // Sub 6: Canceled Starter
+    // Sub 6: Canceled
     const subCanceled = await Subscription.create({
       customerId: custNexus._id,
       productId: prodAPIGateway._id,
-      planName: 'Starter Plan',
+      planId: planEnterpriseCloud._id,
+      planName: planEnterpriseCloud.name,
+      quantity: 1,
+      unitPrice: 800,
+      billingFrequency: 'Monthly',
       billingCycle: 'monthly',
       amount: 800,
       currency: 'INR',
+      currencySymbol: '₹',
       status: 'canceled',
+      planSnapshot: {
+        planId: planEnterpriseCloud._id,
+        name: planEnterpriseCloud.name,
+        price: 800,
+        billingFrequency: 'Monthly',
+        minQuantity: 1,
+        allowEarlyClosure: true,
+        allowPause: true,
+        allowRenewal: true
+      },
       startDate: new Date(now.getFullYear(), now.getMonth() - 6, 1),
       nextBillingDate: new Date(now.getFullYear(), now.getMonth() - 1, 1),
       cancelAtPeriodEnd: true,
       features: ['Standard Support']
     });
 
-    console.log('[Seed] Seeded Subscriptions linked to Products & Variants');
+    console.log('[Seed] Seeded Subscriptions linked to Plans & Products with locked prices');
 
     // 5. Create Invoices
     const invPrimaryPaid1 = await Invoice.create({

@@ -23,6 +23,10 @@ import UserManagement from './pages/admin/UserManagement';
 import ProductList from './pages/products/ProductList';
 import PaymentManagement from './pages/payments/PaymentManagement';
 
+// Subscription Plan Management (Module 4)
+import PlanList from './pages/plans/PlanList';
+import SubscriptionManagement from './pages/subscriptions/SubscriptionManagement';
+
 // User Account
 import Profile from './pages/Profile';
 
@@ -83,6 +87,15 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        {/* Module 4: Subscription Plans (Admin, Staff, Customer) */}
+        <Route
+          path="/plans"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <PlanList />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/payments"
           element={
@@ -111,7 +124,7 @@ function AppRoutes() {
           path="/admin/subscriptions"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <AdminDashboard />
+              <SubscriptionManagement />
             </ProtectedRoute>
           }
         />
@@ -145,7 +158,7 @@ function AppRoutes() {
           path="/staff/subscriptions"
           element={
             <ProtectedRoute allowedRoles={['staff']}>
-              <StaffDashboard />
+              <SubscriptionManagement />
             </ProtectedRoute>
           }
         />
@@ -171,7 +184,7 @@ function AppRoutes() {
           path="/customer/subscriptions"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <CustomerDashboard />
+              <SubscriptionManagement />
             </ProtectedRoute>
           }
         />

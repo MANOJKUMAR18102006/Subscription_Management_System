@@ -60,6 +60,8 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
+app.use('/api/plans', require('./routes/planRoutes'));
+app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 
 // Centralized error handling
 app.use(notFound);
