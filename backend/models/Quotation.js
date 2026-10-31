@@ -295,7 +295,6 @@ quotationSchema.pre('validate', function () {
 });
 
 // Indexes
-quotationSchema.index({ quotationNumber: 1 }, { unique: true });
 quotationSchema.index({ customer: 1, status: 1 });
 quotationSchema.index({ status: 1, expiryDate: 1 });
 quotationSchema.index({ createdDate: -1 });

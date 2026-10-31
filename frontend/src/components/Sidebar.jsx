@@ -16,7 +16,8 @@ import {
   ClipboardList,
   ShieldAlert,
   Headphones,
-  Package
+  Package,
+  FileText
 } from 'lucide-react';
 
 const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
@@ -35,6 +36,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     if (role === 'admin') {
       return [
         { label: 'Overview', to: '/admin/dashboard', icon: LayoutDashboard },
+        { label: 'Quotations', to: '/quotations', icon: FileText, badge: 'Quotes' },
         { label: 'Subscription Plans', to: '/plans', icon: Sparkles, badge: 'Plans' },
         { label: 'Products & Variants', to: '/products', icon: Package, badge: 'Manage' },
         { label: 'Subscriptions Oversight', to: '/admin/subscriptions', icon: Layers },
@@ -49,6 +51,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     if (role === 'staff') {
       return [
         { label: 'Operations Desk', to: '/staff/dashboard', icon: LayoutDashboard },
+        { label: 'Quotations', to: '/quotations', icon: FileText, badge: 'Quotes' },
         { label: 'Subscription Plans', to: '/plans', icon: Sparkles, badge: 'View' },
         { label: 'Products Catalog', to: '/products', icon: Package, badge: 'View Only' },
         { label: 'Active Subscriptions', to: '/staff/subscriptions', icon: Layers },
@@ -62,6 +65,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     // Customer
     return [
       { label: 'My Portal', to: '/customer/dashboard', icon: LayoutDashboard, badge: 'Private' },
+      { label: 'My Quotations', to: '/quotations', icon: FileText, badge: 'Offers' },
       { label: 'Browse Plans', to: '/plans', icon: Sparkles, badge: 'Subscribe' },
       { label: 'My Subscriptions', to: '/customer/subscriptions', icon: Layers },
       { label: 'Invoices & Receipts', to: '/customer/invoices', icon: Receipt },

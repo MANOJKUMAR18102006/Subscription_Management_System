@@ -229,7 +229,7 @@ const ProductFormModal = ({ isOpen, onClose, onSaved, initialData = null }) => {
                 {isEditing ? 'Edit Product' : 'Create New Product'}
               </h2>
               <p className="text-xs text-slate-400">
-                Module 3: Manage product details, multiple variants, and automatic price calculations
+                Manage product details, multiple variants, and automatic price calculations
               </p>
             </div>
           </div>

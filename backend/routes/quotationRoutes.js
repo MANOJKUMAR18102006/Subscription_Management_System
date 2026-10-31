@@ -29,3 +29,4 @@ router.post('/:id/convert-to-subscription', authorize('admin', 'staff'), convert
 router.delete('/:id', authorize('admin'), deleteQuotation);
 
 module.exports = router;
+

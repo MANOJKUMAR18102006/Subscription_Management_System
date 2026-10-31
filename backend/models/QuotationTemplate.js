@@ -128,3 +128,4 @@ const quotationTemplateSchema = new mongoose.Schema(
 quotationTemplateSchema.index({ name: 1, isActive: 1 });
 
 module.exports = mongoose.model('QuotationTemplate', quotationTemplateSchema);
+

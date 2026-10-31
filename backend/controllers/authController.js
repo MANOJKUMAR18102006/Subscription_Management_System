@@ -245,8 +245,8 @@ exports.forgotPassword = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'Password reset link sent to your email address.',
-      // In development mode, provide the direct resetUrl and previewUrl for instantaneous dev testing
-      ...(process.env.NODE_ENV === 'development' && {
+      // In development/test mode, provide the direct resetUrl and previewUrl for instantaneous dev testing
+      ...(process.env.NODE_ENV !== 'production' && {
         resetUrl,
         previewUrl: emailResult.previewUrl
       })

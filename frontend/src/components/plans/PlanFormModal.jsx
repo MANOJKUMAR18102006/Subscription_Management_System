@@ -461,7 +461,7 @@ const PlanFormModal = ({ isOpen, onClose, onSaved, initialData = null }) => {
                 </div>
               ) : availableProducts.length === 0 ? (
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-500">
-                  No products found. Please create products in Module 3 first.
+                  No products found. Please create products first.
                 </div>
               ) : (
                 <div className="space-y-2">

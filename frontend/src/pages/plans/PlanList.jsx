@@ -216,9 +216,6 @@ const PlanList = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-              Module 4
-            </span>
             <span className="text-xs text-slate-400">•</span>
             <span className="text-xs text-slate-500 font-medium">
               {isAdmin ? 'Full Plan Lifecycle Admin' : isStaff ? 'Operations Plan Directory' : 'Available Subscription Catalog'}

@@ -28,6 +28,13 @@ import PaymentManagement from './pages/payments/PaymentManagement';
 import PlanList from './pages/plans/PlanList';
 import SubscriptionManagement from './pages/subscriptions/SubscriptionManagement';
 
+// Quotation Management (Module 5)
+import QuotationList from './pages/quotations/QuotationList';
+import QuotationForm from './pages/quotations/QuotationForm';
+import QuotationDetail from './pages/quotations/QuotationDetail';
+import QuotationPDFView from './pages/quotations/QuotationPDFView';
+import QuotationTemplates from './pages/quotations/QuotationTemplates';
+
 // User Account
 import Profile from './pages/Profile';
 
@@ -105,6 +112,56 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        {/* Module 5: Quotation Management */}
+        <Route
+          path="/quotations"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <QuotationList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quotations/new"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <QuotationForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quotations/:id"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <QuotationDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quotations/:id/edit"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <QuotationForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quotations/:id/print"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <QuotationPDFView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quotation-templates"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <QuotationTemplates />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/payments"
           element={

@@ -165,7 +165,7 @@ const ProductList = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
-              Module 3: Product Management
+              Product Management
             </span>
             <span className="text-xs text-slate-400">&bull;</span>
             <span className="text-xs font-semibold text-slate-600">
