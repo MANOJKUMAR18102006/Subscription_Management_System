@@ -9,6 +9,45 @@ A secure, enterprise-grade subscription management and recurring billing platfor
 - **Module 1: Authentication & Role-Based Access Control (RBAC)** — Complete
 - **Module 2: Business & Operational Dashboards** — Complete
 - **Module 3: Product Management with Dynamic Variants & Auto-Pricing** — Complete
+- **Module 4: Subscription Plan Management & Agreed Pricing Retention** — Complete
+
+---
+
+## 📋 Module 4: Subscription Plan Management
+
+### 1. Plan Capabilities & Roles
+- **Admin:** Full lifecycle control — create, edit, toggle status, delete, archive plans, and trigger auto-close scans.
+- **Staff:** Read-only operational oversight — view plans catalog, inspect availability schedules, and run auto-close scans.
+- **Customer:** Self-service subscription — browse available active plans and subscribe with quantity selector respecting minimum thresholds.
+
+### 2. Plan Fields & Schema
+- **Plan Name:** e.g., "Enterprise Cloud Suite", "Business Automation Annual".
+- **Description:** Clear target audience description and entitlement overview.
+- **Linked Product(s):** Multi-product linking (`linkedProducts` array) with primary flag and product-specific minimum quantity.
+- **Billing Frequency:** `Daily`, `Weekly`, `Monthly`, `Yearly`.
+- **Price:** Recurring base rate per billing cycle.
+- **Minimum Quantity:** Enforced minimum license threshold (e.g. 1, 2, 5 units).
+- **Available From Date:** Availability start timestamp.
+- **Available Until Date:** Expiration timestamp (optional / perpetual).
+- **Auto Close Setting:** Automatically transitions plan status to `Closed` when `availableUntil` passes.
+- **Allow Early Closure:** Contract toggle permitting or prohibiting early subscription cancellation.
+- **Allow Pause:** Contract toggle permitting or prohibiting temporary subscription hold.
+- **Allow Renewal:** Contract toggle permitting or prohibiting recurring/manual contract renewal.
+- **Plan Status:** `Active`, `Draft`, `Inactive`, `Closed`, `Archived`.
+- **Features / Entitlements:** Array of feature deliverables.
+
+### 3. Fulfillments & Safeguards
+1. **Multi-Product Linking (Req 1):** One or more products can be bundled into a single plan.
+2. **Minimum Quantities (Req 2):** Subscriptions cannot order fewer units than `plan.minQuantity`.
+3. **Date Validation (Req 3):** Pre-validation ensures `availableUntil >= availableFrom`.
+4. **Auto-Close Processing (Req 4):** Expired plans with `autoClose: true` automatically update to `Closed`.
+5. **Contract Lifecycle Permissions (Req 5):** Early closure, pause, and renewal are strictly enforced based on the plan's admin settings.
+6. **Unavailable Plan Blocking (Req 6):** Subscriptions are blocked from using expired, scheduled, draft, or closed plans.
+7. **Agreed Pricing Retention (Req 7):** Existing subscriptions store a frozen `unitPrice`, `amount`, and `planSnapshot`, guaranteeing their pricing never changes when the original plan is edited.
+8. **Plan Listing & Filters (Req 8):** Full server-side pagination, regex search, frequency filters, status filters, and availability filters.
+9. **Two-Way Deletion Protection:**
+   - Products linked to active plans cannot be deleted.
+   - Plans linked to active subscriptions cannot be deleted.
 
 ---
 
