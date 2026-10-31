@@ -13,7 +13,7 @@ import ResetPassword from './pages/auth/ResetPassword';
 // Dashboards
 import AdminDashboard from './pages/dashboards/AdminDashboard';
 import StaffDashboard from './pages/dashboards/StaffDashboard';
-import CustomerDashboard from './pages/dashboards/CustomerDashboard';
+import CustomerPortal from './pages/customer/CustomerPortal';
 
 // Admin / Staff Management
 import StaffManagement from './pages/admin/StaffManagement';
@@ -176,7 +176,7 @@ function AppRoutes() {
           path="/customer/dashboard"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <CustomerDashboard />
+              <CustomerPortal />
             </ProtectedRoute>
           }
         />
@@ -184,7 +184,7 @@ function AppRoutes() {
           path="/customer/subscriptions"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <SubscriptionManagement />
+              <CustomerPortal initialTab="subscriptions" />
             </ProtectedRoute>
           }
         />
@@ -192,7 +192,7 @@ function AppRoutes() {
           path="/customer/invoices"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <CustomerDashboard />
+              <CustomerPortal initialTab="billing" />
             </ProtectedRoute>
           }
         />
@@ -200,7 +200,7 @@ function AppRoutes() {
           path="/customer/payments"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <PaymentManagement />
+              <CustomerPortal initialTab="billing" />
             </ProtectedRoute>
           }
         />

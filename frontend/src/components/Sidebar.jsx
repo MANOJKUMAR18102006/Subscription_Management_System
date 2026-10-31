@@ -59,11 +59,11 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
 
     // Customer
     return [
-      { label: 'My Portal', to: '/customer/dashboard', icon: LayoutDashboard },
+      { label: 'My Portal', to: '/customer/dashboard', icon: LayoutDashboard, badge: 'Private' },
       { label: 'Browse Plans', to: '/plans', icon: Sparkles, badge: 'Subscribe' },
       { label: 'My Subscriptions', to: '/customer/subscriptions', icon: Layers },
       { label: 'Invoices & Receipts', to: '/customer/invoices', icon: Receipt },
-      { label: 'Payment Methods', to: '/customer/payments', icon: CreditCard }
+      { label: 'Payment History', to: '/customer/payments', icon: CreditCard }
     ];
   };
 

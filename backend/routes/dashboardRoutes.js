@@ -18,7 +18,6 @@ router.get('/admin', authorize('admin'), getAdminDashboard);
 router.get('/staff', authorize('admin', 'staff'), getStaffDashboard);
 
 // Customer dashboard endpoint (Role-protected: customer & admin)
-router.get('/customer', getCustomerDashboard);
+router.get('/customer', authorize('customer'), getCustomerDashboard);
 
 module.exports = router;
-
