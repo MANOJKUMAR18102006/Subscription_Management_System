@@ -1,6 +1,56 @@
-# Subscription Management System — Module 1: Authentication & Role-Based Access Control (RBAC)
+# Subscription Management System
 
-A secure, enterprise-grade authentication and role-based authorization system built with the **MERN stack** (MongoDB, Express, React, Node.js) with Tailwind CSS, JWT authentication, Bcrypt password hashing, and role isolation.
+A secure, enterprise-grade subscription management and recurring billing platform built with the **MERN stack** (MongoDB, Express, React, Node.js), Tailwind CSS, Recharts, JWT authentication, and MongoDB Aggregation Pipelines.
+
+---
+
+## 📌 Module Overview
+
+- **Module 1: Authentication & Role-Based Access Control (RBAC)** — Complete
+- **Module 2: Business & Operational Dashboards** — Complete
+
+---
+
+## 📊 Module 2: Role-Tailored Business Dashboards
+
+### 1. Executive Admin Dashboard (`/admin/dashboard`)
+1. **Total Customers:** Live database count of registered customer accounts, plus new registrations in selected period.
+2. **Total Active Subscriptions:** Live count of serviceable subscriptions (`status: 'active'`).
+3. **Total Revenue:** Dynamic MongoDB aggregation summing succeeded payment volume within the selected date filter (and lifetime total).
+4. **Pending Payments:** Aggregation of unsettled payments and pending invoices.
+5. **Overdue Invoices:** Aggregated volume and count of invoices past due date.
+6. **Monthly Recurring Revenue (MRR):** Calculated via MongoDB `$cond` aggregation normalizing monthly plans (`amount`) and annual plans (`amount / 12`).
+7. **Annual Recurring Revenue (ARR):** Annualized contract value calculated as `MRR * 12`.
+8. **Recent Subscriptions:** Chronological list of newest subscriptions populated with customer information.
+9. **Recent Payments:** Chronological list of latest transaction references, payment methods, and timestamps.
+10. **Revenue Overview Chart:** Multi-month historical revenue trend powered by **Recharts AreaChart**.
+11. **Subscription Status Distribution Chart:** Donut chart powered by **Recharts PieChart** mapping active, trialing, past due, and canceled plans.
+
+### 2. Operations Staff Dashboard (`/staff/dashboard`)
+1. **Total Customers:** Registered customer directory counter.
+2. **Active Subscriptions:** Active customer accounts requiring daily operational support.
+3. **Pending Invoices:** Invoices awaiting payment verification and reminder dispatch.
+4. **Overdue Invoices:** Escalated invoices requiring subscriber assistance.
+5. **Recent Customer Activities:** Live audit trail of events (e.g. payment successes, payment failures, subscription renewals, plan upgrades).
+- **Renewal Queue:** Quick actions for staff to dispatch reminders and operational notices.
+
+### 3. Customer Self-Service Portal (`/customer/dashboard`)
+1. **My Active Subscriptions:** Isolated customer plan details, billing cycle, renewal dates, and plan entitlements.
+2. **Next Billing Date:** Earliest upcoming scheduled renewal with remaining days countdown badge.
+3. **Outstanding Invoices:** Personal unpaid or overdue invoices.
+4. **Total Payments:** Total payments settled by this customer with transaction counter.
+5. **Recent Invoices & Payment History:** Downloadable PDF invoice receipts and card transaction records.
+
+---
+
+## 🗓️ Dynamic Date Filtering
+
+All dashboards dynamically filter metrics and aggregations via:
+- **Today**
+- **This Month**
+- **Last Month**
+- **This Year**
+- **All Time**
 
 ---
 

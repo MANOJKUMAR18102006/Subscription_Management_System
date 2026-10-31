@@ -57,6 +57,7 @@ app.get('/api/health', (req, res) => {
 // Mount Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 // Centralized error handling
 app.use(notFound);
