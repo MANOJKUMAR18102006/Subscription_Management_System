@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Shield, Lock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Sparkles, Shield, Lock, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AuthLayout = ({ children, title, subtitle, showBrandBadge = true }) => {
@@ -22,7 +22,7 @@ const AuthLayout = ({ children, title, subtitle, showBrandBadge = true }) => {
             {showBrandBadge && (
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-4">
                 <Shield className="w-3.5 h-3.5" />
-                <span>Enterprise Identity & RBAC</span>
+                <span>Enterprise Identity & Access Governance</span>
               </div>
             )}
 
@@ -54,26 +54,29 @@ const AuthLayout = ({ children, title, subtitle, showBrandBadge = true }) => {
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
 
+        {/* Top Header: Enterprise Badge + OWASP Compliant Badge */}
         <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold text-blue-400">Module 1</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-xs text-slate-300">Identity & Role-Based Access Control</span>
+            <span className="text-xs uppercase tracking-wider font-semibold text-blue-300">
+              Enterprise Billing Platform
+            </span>
           </div>
-          <div className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-medium border border-white/10 text-blue-200 flex items-center gap-1.5">
+          <div className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-medium border border-white/10 text-blue-200 flex items-center gap-1.5 shadow-xs">
             <Lock className="w-3 h-3 text-emerald-400" />
             <span>OWASP Compliant</span>
           </div>
         </div>
 
+        {/* Hero Section with Production Heading */}
         <div className="relative z-10 my-auto max-w-lg space-y-6">
           <h3 className="text-3xl font-bold leading-tight tracking-tight text-white">
-            Secure, scalable subscription governance for modern businesses.
+            Secure Subscription Management for Modern Businesses.
           </h3>
           <p className="text-slate-300 text-sm leading-relaxed">
             Role-tailored interfaces for Administrators, Support Staff, and Subscribers with strict API middleware barriers.
           </p>
 
+          {/* Admin, Staff and Customer Role Descriptions */}
           <div className="space-y-3 pt-2">
             <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-3 rounded-xl backdrop-blur-xs">
               <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center font-bold text-xs shrink-0">
@@ -107,12 +110,13 @@ const AuthLayout = ({ children, title, subtitle, showBrandBadge = true }) => {
           </div>
         </div>
 
+        {/* Footer info */}
         <div className="relative z-10 pt-8 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>MERN Stack (MongoDB, Express, React, Node.js)</span>
+            <span>High-Availability Cloud Architecture</span>
           </div>
-          <span>Bcrypt &middot; JWT &middot; Nodemailer</span>
+          <span>Bcrypt &middot; JWT &middot; 256-bit Encryption</span>
         </div>
       </div>
     </div>
@@ -120,4 +124,3 @@ const AuthLayout = ({ children, title, subtitle, showBrandBadge = true }) => {
 };
 
 export default AuthLayout;
-
