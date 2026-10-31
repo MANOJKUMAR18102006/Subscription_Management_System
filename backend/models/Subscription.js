@@ -127,9 +127,9 @@ subscriptionSchema.index({ customerId: 1, status: 1 });
 subscriptionSchema.index({ planId: 1, status: 1 });
 subscriptionSchema.index({ status: 1, createdAt: 1 });
 subscriptionSchema.index({ nextBillingDate: 1 });
+subscriptionSchema.index({ status: 1, createdAt: -1, customerId: 1, planId: 1 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);
 
 module.exports = Subscription;
-
 

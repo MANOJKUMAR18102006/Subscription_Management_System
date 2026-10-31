@@ -41,7 +41,8 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         { label: 'Staff Management', to: '/admin/staff', icon: UserPlus, badge: 'Admin Only' },
         { label: 'User Directory', to: '/admin/users', icon: Users },
         { label: 'Audit Logs', to: '/admin/audit', icon: ClipboardList },
-        { label: 'Payments & Receipts', to: '/payments', icon: CreditCard }
+        { label: 'Payments & Receipts', to: '/payments', icon: CreditCard },
+        { label: 'Reports & Analytics', to: '/reports', icon: ClipboardList, badge: 'Finance' }
       ];
     }
 
@@ -53,7 +54,8 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         { label: 'Active Subscriptions', to: '/staff/subscriptions', icon: Layers },
         { label: 'Subscribers', to: '/staff/subscribers', icon: Users },
         { label: 'Support Queue', to: '/staff/support', icon: Headphones, badge: 'Daily Ops' },
-        { label: 'Payments & Receipts', to: '/payments', icon: CreditCard }
+        { label: 'Payments & Receipts', to: '/payments', icon: CreditCard },
+        { label: 'Reports & Analytics', to: '/reports', icon: ClipboardList, badge: 'Finance' }
       ];
     }
 

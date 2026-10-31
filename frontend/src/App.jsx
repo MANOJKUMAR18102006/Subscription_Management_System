@@ -14,6 +14,7 @@ import ResetPassword from './pages/auth/ResetPassword';
 import AdminDashboard from './pages/dashboards/AdminDashboard';
 import StaffDashboard from './pages/dashboards/StaffDashboard';
 import CustomerPortal from './pages/customer/CustomerPortal';
+import ReportsDashboard from './pages/reports/ReportsDashboard';
 
 // Admin / Staff Management
 import StaffManagement from './pages/admin/StaffManagement';
@@ -75,6 +76,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <ReportsDashboard />
             </ProtectedRoute>
           }
         />

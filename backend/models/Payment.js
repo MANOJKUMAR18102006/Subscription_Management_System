@@ -71,6 +71,7 @@ const paymentSchema = new mongoose.Schema(
 paymentSchema.index({ status: 1, paymentDate: 1, amount: 1 });
 paymentSchema.index({ customerId: 1, status: 1 });
 paymentSchema.index({ invoiceId: 1, paymentDate: -1 });
+paymentSchema.index({ status: 1, paymentDate: -1, customerId: 1 });
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
