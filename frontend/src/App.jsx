@@ -19,6 +19,9 @@ import CustomerDashboard from './pages/dashboards/CustomerDashboard';
 import StaffManagement from './pages/admin/StaffManagement';
 import UserManagement from './pages/admin/UserManagement';
 
+// Product Management (Module 3)
+import ProductList from './pages/products/ProductList';
+
 // User Account
 import Profile from './pages/Profile';
 
@@ -67,6 +70,15 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        {/* Module 3: Products & Catalog (Admin & Staff) */}
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <ProductList />
             </ProtectedRoute>
           }
         />

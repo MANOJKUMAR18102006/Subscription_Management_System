@@ -7,6 +7,15 @@ const subscriptionSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Subscription must belong to a customer']
     },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product'
+    },
+    selectedVariant: {
+      variantName: String,
+      optionValue: String,
+      additionalPrice: { type: Number, default: 0 }
+    },
     planName: {
       type: String,
       required: [true, 'Plan name is required'],

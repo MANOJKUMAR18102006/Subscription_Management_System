@@ -15,7 +15,8 @@ import {
   Sparkles,
   ClipboardList,
   ShieldAlert,
-  Headphones
+  Headphones,
+  Package
 } from 'lucide-react';
 
 const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
@@ -34,6 +35,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     if (role === 'admin') {
       return [
         { label: 'Overview', to: '/admin/dashboard', icon: LayoutDashboard },
+        { label: 'Products & Variants', to: '/products', icon: Package, badge: 'Manage' },
         { label: 'Staff Management', to: '/admin/staff', icon: UserPlus, badge: 'Admin Only' },
         { label: 'User Directory', to: '/admin/users', icon: Users },
         { label: 'Subscriptions Oversight', to: '/admin/subscriptions', icon: Layers },
@@ -44,6 +46,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
     if (role === 'staff') {
       return [
         { label: 'Operations Desk', to: '/staff/dashboard', icon: LayoutDashboard },
+        { label: 'Products Catalog', to: '/products', icon: Package, badge: 'View Only' },
         { label: 'Subscribers', to: '/staff/subscribers', icon: Users },
         { label: 'Active Subscriptions', to: '/staff/subscriptions', icon: Layers },
         { label: 'Support Queue', to: '/staff/support', icon: Headphones, badge: 'Daily Ops' }

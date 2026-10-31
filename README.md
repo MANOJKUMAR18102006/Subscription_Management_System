@@ -8,6 +8,47 @@ A secure, enterprise-grade subscription management and recurring billing platfor
 
 - **Module 1: Authentication & Role-Based Access Control (RBAC)** — Complete
 - **Module 2: Business & Operational Dashboards** — Complete
+- **Module 3: Product Management with Dynamic Variants & Auto-Pricing** — Complete
+
+---
+
+## 📦 Module 3: Product Management & Dynamic Pricing
+
+### 1. Product Capabilities & Roles
+- **Admin:** Full CRUD access — create, view, edit, archive, and delete products.
+- **Staff:** Read-only access — view products catalog, examine variant matrices, and run price calculations.
+- **Customer:** Blocked from product management (cannot create, edit, or delete).
+
+### 2. Product Fields
+- **Product Name:** e.g., "Business Software", "Cloud CRM Suite".
+- **Product Type:** Software, Service, Add-on, Subscription Plan, Hardware.
+- **Sales Price:** Base sales price (e.g. ₹2000).
+- **Cost Price:** Unit cost to business (e.g. ₹1200).
+- **Description / Notes:** Detailed specifications and entitlement notes.
+- **Product Image:** Optional thumbnail or hero image URL.
+- **Product Status:** `Active`, `Archived`, `Draft`, `Inactive`.
+
+### 3. Dynamic Product Variants & Automatic Price Calculation
+- Products support multiple variants (e.g., **Brand**, **Edition**, **Storage**, **Tier**).
+- Each variant has option values (e.g. for Brand: `Odoo`, `SAP`, `Salesforce`).
+- Each option has an `additionalPrice` (e.g. `₹560`).
+- **Automatic Final Price Calculation:**
+  $$\text{Final Price} = \text{Base Price} + \sum \text{Option Additional Prices}$$
+- **Example:**
+  - Product: **Business Software**
+  - Base Price: **₹2000**
+  - Variant: **Brand** &rarr; Option: **Odoo** (Additional: **₹560**)
+  - Final Calculated Price: **₹2560**
+
+### 4. Subscription Protection Guard
+- Products linked to active customer subscriptions cannot be deleted directly.
+- The system returns an explicit notification: *"Cannot delete 'Product' because it is linked to X active subscription(s). You can safely archive it instead."*
+- Safe Archiving retired products allows existing subscription contracts to continue uninterrupted while blocking new signups.
+
+### 5. Search, Filter & Pagination
+- **Search:** Search across product name, description, and variant option values.
+- **Filters:** Filter by Status (`Active`, `Archived`, `Draft`, `Inactive`) and Type (`Software`, `Service`, `Add-on`, etc.).
+- **Pagination:** Server-side pagination with `totalProducts`, `totalPages`, and `currentPage`.
 
 ---
 

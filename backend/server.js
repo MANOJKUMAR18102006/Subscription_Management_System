@@ -58,6 +58,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
 
 // Centralized error handling
 app.use(notFound);
