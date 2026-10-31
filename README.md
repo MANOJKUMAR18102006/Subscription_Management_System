@@ -7,7 +7,7 @@ A secure, enterprise-grade subscription management and recurring billing platfor
 ## 📌 Module Overview
 
 - **Module 1: Authentication & Role-Based Access Control (RBAC)** — Complete
-- **Module 2: Business & Operational Dashboards** — Complete
+- **Module 2: Business & Operational Dashboards for control** — Complete
 - **Module 3: Product Management with Dynamic Variants & Auto-Pricing** — Complete
 - **Module 4: Subscription Plan Management & Agreed Pricing Retention** — Complete
 
