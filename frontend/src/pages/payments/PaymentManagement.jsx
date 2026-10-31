@@ -116,7 +116,7 @@ const PaymentManagement = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">Module 10: Payment Management</span>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">Payment Management</span>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mt-2">Payments & Receipts</h1>
           <p className="text-xs text-slate-500 mt-0.5">Track invoice settlement, partial payments, balances, and payment history.</p>
         </div>

@@ -642,8 +642,59 @@ const convertToSubscription = async (req, res) => {
         break;
     }
 
+    // Generate Unique Subscription Number (Requirement 2)
+    const year = new Date().getFullYear();
+    const prefix = `SUB-${year}-`;
+    const latestSub = await Subscription.findOne({
+      subscriptionNumber: { $regex: new RegExp(`^SUB-${year}-\\d+$`) }
+    }).sort({ subscriptionNumber: -1 });
+
+    let nextSeq = 1;
+    if (latestSub && latestSub.subscriptionNumber) {
+      const parts = latestSub.subscriptionNumber.split('-');
+      const lastNum = parseInt(parts[2], 10);
+      if (!isNaN(lastNum)) {
+        nextSeq = lastNum + 1;
+      }
+    }
+
+    let subscriptionNumber = `${prefix}${String(nextSeq).padStart(4, '0')}`;
+    while (await Subscription.findOne({ subscriptionNumber })) {
+      nextSeq++;
+      subscriptionNumber = `${prefix}${String(nextSeq).padStart(4, '0')}`;
+    }
+
+    // Map quotation lines to subscription lines (Requirement 4)
+    const subscriptionLines = [];
+    if (Array.isArray(quotation.products)) {
+      quotation.products.forEach((p) => {
+        const qty = p.quantity || 1;
+        const unit = p.unitPrice || 0;
+        const disc = p.discount || 0;
+        const taxR = p.taxRate || 18;
+        const base = qty * unit;
+        const discAmt = base * (disc / 100);
+        const net = base - discAmt;
+        const taxAmt = net * (taxR / 100);
+
+        subscriptionLines.push({
+          product: p.product?._id || p.product,
+          name: p.name || 'Product Line',
+          variant: p.variant || '',
+          quantity: qty,
+          unitPrice: unit,
+          taxRate: taxR,
+          taxAmount: Number(taxAmt.toFixed(2)),
+          discount: disc,
+          discountAmount: Number(discAmt.toFixed(2)),
+          lineTotal: p.lineTotal || Number((net + taxAmt).toFixed(2))
+        });
+      });
+    }
+
     // Create Subscription
     const subscription = new Subscription({
+      subscriptionNumber,
       customerId: quotation.customer._id || quotation.customer,
       productId: primaryProductLine?.product?._id || primaryProductLine?.product || undefined,
       planId: planDoc?._id || undefined,
@@ -652,7 +703,16 @@ const convertToSubscription = async (req, res) => {
       unitPrice: primaryPlanLine?.unitPrice || quotation.totalAmount,
       billingFrequency,
       billingCycle: billingFrequency.toLowerCase(),
+      subscriptionLines,
+      subtotal: quotation.subtotal,
+      taxAmount: quotation.taxAmount,
+      discountAmount: quotation.discountAmount,
+      totalAmount: quotation.totalAmount,
       amount: quotation.totalAmount,
+      paymentTerms: quotation.paymentTerms || 'Net 30',
+      expiryDate: quotation.expiryDate,
+      quotationId: quotation._id,
+      quotationNumber: quotation.quotationNumber,
       currency: quotation.currency || 'INR',
       currencySymbol: quotation.currencySymbol || '₹',
       status: 'active',
@@ -674,7 +734,16 @@ const convertToSubscription = async (req, res) => {
             features: planDoc.features || []
           }
         : undefined,
-      features: planDoc?.features || []
+      features: planDoc?.features || [],
+      history: [
+        {
+          action: 'Created from Quotation',
+          performedBy: req.user._id,
+          performedByName: req.user.name,
+          timestamp: new Date(),
+          details: `Provisioned into active subscription #${subscriptionNumber} from Confirmed Quotation #${quotation.quotationNumber}`
+        }
+      ]
     });
 
     await subscription.save();

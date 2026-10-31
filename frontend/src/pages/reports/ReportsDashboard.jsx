@@ -71,7 +71,7 @@ const ReportsDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200">
-        <div><span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Module 12: Reports & Analytics</span><h1 className="text-2xl font-extrabold text-slate-900 mt-3">Financial reporting center</h1><p className="text-sm text-slate-500 mt-1">Actual recorded payments, invoices, and subscription records for finance and administration.</p></div>
+        <div><span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">Reports & Analytics</span><h1 className="text-2xl font-extrabold text-slate-900 mt-3">Financial reporting center</h1><p className="text-sm text-slate-500 mt-1">Actual recorded payments, invoices, and subscription records for finance and administration.</p></div>
         <div className="flex flex-wrap gap-2"><button type="button" onClick={load} className="px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700"><RefreshCw className="w-4 h-4 inline mr-1" />Refresh</button><button type="button" onClick={() => exportReport('csv')} className="px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold"><Download className="w-4 h-4 inline mr-1" />CSV</button><button type="button" onClick={() => exportReport('pdf')} className="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold"><FileBarChart className="w-4 h-4 inline mr-1" />PDF</button></div>
       </div>
 

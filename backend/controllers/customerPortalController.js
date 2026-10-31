@@ -38,7 +38,7 @@ exports.getPortal = async (req, res, next) => {
       ['pending', 'partially_paid', 'overdue'].includes(invoice.status) && Number(invoice.balanceDue || 0) > 0
     );
     const nextBilling = subscriptions
-      .filter((subscription) => subscription.status === 'active' && subscription.nextBillingDate)
+      .filter((subscription) => (subscription.status || '').toLowerCase() === 'active' && subscription.nextBillingDate)
       .sort((a, b) => new Date(a.nextBillingDate) - new Date(b.nextBillingDate))[0];
 
     res.json({

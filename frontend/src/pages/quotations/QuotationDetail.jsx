@@ -330,15 +330,15 @@ const QuotationDetail = () => {
                 Quotation Converted into Active Subscription
               </h3>
               <p className="text-xs text-emerald-700">
-                Subscription ID: {quotation.subscriptionId?._id || quotation.subscriptionId}
+                Subscription: <span className="font-bold">{quotation.subscriptionId?.subscriptionNumber || quotation.subscriptionId?._id || quotation.subscriptionId}</span>
               </p>
             </div>
           </div>
           <Link
-            to={`/admin/subscriptions`}
-            className="text-xs font-semibold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 underline"
+            to={`/subscriptions/${quotation.subscriptionId?._id || quotation.subscriptionId}`}
+            className="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1.5 px-3 py-1.5 bg-white/80 rounded-lg border border-emerald-300 shadow-2xs"
           >
-            View Subscriptions <ArrowRight className="w-3.5 h-3.5" />
+            View Subscription Details <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       )}

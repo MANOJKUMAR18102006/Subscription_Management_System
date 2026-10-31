@@ -24,9 +24,10 @@ import UserManagement from './pages/admin/UserManagement';
 import ProductList from './pages/products/ProductList';
 import PaymentManagement from './pages/payments/PaymentManagement';
 
-// Subscription Plan Management (Module 4)
+// Subscription Plan Management (Module 4) & Subscriptions (Module 6)
 import PlanList from './pages/plans/PlanList';
 import SubscriptionManagement from './pages/subscriptions/SubscriptionManagement';
+import SubscriptionDetail from './pages/subscriptions/SubscriptionDetail';
 
 // Quotation Management (Module 5)
 import QuotationList from './pages/quotations/QuotationList';
@@ -167,6 +168,24 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['admin', 'staff']}>
               <PaymentManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Module 6: Subscription Management */}
+        <Route
+          path="/subscriptions"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <SubscriptionManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subscriptions/:id"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <SubscriptionDetail />
             </ProtectedRoute>
           }
         />

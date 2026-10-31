@@ -24,7 +24,7 @@ exports.getAdminDashboard = async (req, res, next) => {
     });
 
     // 2. Total Active Subscriptions
-    const totalActiveSubscriptions = await Subscription.countDocuments({ status: 'active' });
+    const totalActiveSubscriptions = await Subscription.countDocuments({ status: { $in: ['active', 'Active'] } });
 
     // 3. Total Revenue in Date Filter Period (MongoDB Aggregation)
     const revenueAgg = await Payment.aggregate([
@@ -93,7 +93,7 @@ exports.getAdminDashboard = async (req, res, next) => {
     // Aggregation: sums monthly amount + (yearly amount / 12) for all active subscriptions
     const mrrAgg = await Subscription.aggregate([
       {
-        $match: { status: 'active' }
+        $match: { status: { $in: ['active', 'Active'] } }
       },
       {
         $group: {
@@ -239,7 +239,7 @@ exports.getStaffDashboard = async (req, res, next) => {
     });
 
     // 2. Active Subscriptions
-    const activeSubscriptions = await Subscription.countDocuments({ status: 'active' });
+    const activeSubscriptions = await Subscription.countDocuments({ status: { $in: ['active', 'Active'] } });
 
     // 3. Pending Invoices (Count and Amount via Aggregation)
     const pendingInvoicesAgg = await Invoice.aggregate([
@@ -338,7 +338,7 @@ exports.getCustomerDashboard = async (req, res, next) => {
     // 1. Customer's Active Subscriptions
     const myActiveSubscriptions = await Subscription.find({
       customerId,
-      status: 'active'
+      status: { $in: ['active', 'Active'] }
     }).sort({ createdAt: -1 });
 
     const allMySubscriptions = await Subscription.find({
@@ -348,7 +348,7 @@ exports.getCustomerDashboard = async (req, res, next) => {
     // 2. Next Billing Date (Earliest nextBillingDate from active subscriptions)
     const upcomingSubscription = await Subscription.findOne({
       customerId,
-      status: 'active',
+      status: { $in: ['active', 'Active'] },
       nextBillingDate: { $gte: new Date() }
     }).sort({ nextBillingDate: 1 });
 

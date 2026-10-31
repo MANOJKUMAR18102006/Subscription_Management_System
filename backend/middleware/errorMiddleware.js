@@ -9,6 +9,7 @@ const notFound = (req, res, next) => {
 };
 
 const errorHandler = (err, req, res, next) => {
+  console.error('[Error Handler]:', err.stack || err);
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   if (err.statusCode) statusCode = err.statusCode;
   let message = err.message || 'Internal Server Error';

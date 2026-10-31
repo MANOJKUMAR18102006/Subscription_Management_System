@@ -12,6 +12,10 @@ const activitySchema = new mongoose.Schema(
       required: true,
       enum: [
         'subscription_created',
+        'subscription_confirmed',
+        'subscription_activated',
+        'subscription_paused',
+        'subscription_resumed',
         'subscription_renewed',
         'subscription_canceled',
         'invoice_generated',
