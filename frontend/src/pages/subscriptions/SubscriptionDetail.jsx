@@ -785,10 +785,10 @@ const SubscriptionDetail = () => {
                     </td>
                     <td className="py-3 px-4 text-right">
                       <Link
-                        to="/payments"
+                        to={`/invoices/${inv._id}`}
                         className="text-blue-600 hover:text-blue-800 font-semibold text-[11px]"
                       >
-                        View / Pay
+                        View Invoice →
                       </Link>
                     </td>
                   </tr>

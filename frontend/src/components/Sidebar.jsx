@@ -17,7 +17,9 @@ import {
   ShieldAlert,
   Headphones,
   Package,
-  FileText
+  FileText,
+  Percent,
+  Tag
 } from 'lucide-react';
 
 const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
@@ -40,6 +42,9 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         { label: 'Subscription Plans', to: '/plans', icon: Sparkles, badge: 'Plans' },
         { label: 'Products & Variants', to: '/products', icon: Package, badge: 'Manage' },
         { label: 'Subscriptions', to: '/subscriptions', icon: Layers, badge: 'Contracts' },
+        { label: 'Invoices & Billing', to: '/invoices', icon: Receipt, badge: 'Billing' },
+        { label: 'Tax Rules', to: '/taxes', icon: Percent, badge: 'Tax' },
+        { label: 'Discounts & Coupons', to: '/discounts', icon: Tag, badge: 'Promo' },
         { label: 'Staff Management', to: '/admin/staff', icon: UserPlus, badge: 'Admin Only' },
         { label: 'User Directory', to: '/admin/users', icon: Users },
         { label: 'Audit Logs', to: '/admin/audit', icon: ClipboardList },
@@ -55,6 +60,9 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         { label: 'Subscription Plans', to: '/plans', icon: Sparkles, badge: 'View' },
         { label: 'Products Catalog', to: '/products', icon: Package, badge: 'View Only' },
         { label: 'Subscriptions', to: '/subscriptions', icon: Layers, badge: 'Contracts' },
+        { label: 'Invoices & Billing', to: '/invoices', icon: Receipt, badge: 'Billing' },
+        { label: 'Tax Rules', to: '/taxes', icon: Percent, badge: 'Tax' },
+        { label: 'Discounts & Coupons', to: '/discounts', icon: Tag, badge: 'Promo' },
         { label: 'Subscribers', to: '/staff/subscribers', icon: Users },
         { label: 'Support Queue', to: '/staff/support', icon: Headphones, badge: 'Daily Ops' },
         { label: 'Payments & Receipts', to: '/payments', icon: CreditCard },
@@ -68,7 +76,7 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
       { label: 'My Quotations', to: '/quotations', icon: FileText, badge: 'Offers' },
       { label: 'Browse Plans', to: '/plans', icon: Sparkles, badge: 'Subscribe' },
       { label: 'My Subscriptions', to: '/customer/subscriptions', icon: Layers },
-      { label: 'Invoices & Receipts', to: '/customer/invoices', icon: Receipt },
+      { label: 'Invoices & Billing', to: '/invoices', icon: Receipt },
       { label: 'Payment History', to: '/customer/payments', icon: CreditCard }
     ];
   };

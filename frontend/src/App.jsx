@@ -29,6 +29,15 @@ import PlanList from './pages/plans/PlanList';
 import SubscriptionManagement from './pages/subscriptions/SubscriptionManagement';
 import SubscriptionDetail from './pages/subscriptions/SubscriptionDetail';
 
+// Tax Management & Discount Management
+import TaxManagement from './pages/taxes/TaxManagement';
+import DiscountManagement from './pages/discounts/DiscountManagement';
+
+// Invoice Management & Recurring Billing
+import InvoiceList from './pages/invoices/InvoiceList';
+import InvoiceDetail from './pages/invoices/InvoiceDetail';
+import InvoicePDFView from './pages/invoices/InvoicePDFView';
+
 // Quotation Management (Module 5)
 import QuotationList from './pages/quotations/QuotationList';
 import QuotationForm from './pages/quotations/QuotationForm';
@@ -186,6 +195,52 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
               <SubscriptionDetail />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Tax Management */}
+        <Route
+          path="/taxes"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <TaxManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Discount Management */}
+        <Route
+          path="/discounts"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <DiscountManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Invoice Management & Recurring Billing */}
+        <Route
+          path="/invoices"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <InvoiceList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invoices/:id"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <InvoiceDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invoices/:id/print"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
+              <InvoicePDFView />
             </ProtectedRoute>
           }
         />
