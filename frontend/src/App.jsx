@@ -21,6 +21,7 @@ import UserManagement from './pages/admin/UserManagement';
 
 // Product Management (Module 3)
 import ProductList from './pages/products/ProductList';
+import PaymentManagement from './pages/payments/PaymentManagement';
 
 // User Account
 import Profile from './pages/Profile';
@@ -79,6 +80,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['admin', 'staff']}>
               <ProductList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payments"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <PaymentManagement />
             </ProtectedRoute>
           }
         />
@@ -178,7 +187,7 @@ function AppRoutes() {
           path="/customer/payments"
           element={
             <ProtectedRoute allowedRoles={['customer']}>
-              <CustomerDashboard />
+              <PaymentManagement />
             </ProtectedRoute>
           }
         />
@@ -205,4 +214,3 @@ function App() {
 }
 
 export default App;
-

@@ -10,6 +10,7 @@ const notFound = (req, res, next) => {
 
 const errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  if (err.statusCode) statusCode = err.statusCode;
   let message = err.message || 'Internal Server Error';
 
   // Handle Mongoose duplicate key error (e.g. unique email)
@@ -42,4 +43,3 @@ module.exports = {
   notFound,
   errorHandler
 };
-

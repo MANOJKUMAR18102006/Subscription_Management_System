@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema(
   {
-    transactionId: {
+    paymentReference: {
       type: String,
       required: true,
       unique: true,
+      trim: true
+    },
+    transactionReference: {
+      type: String,
       trim: true
     },
     customerId: {
@@ -19,7 +23,8 @@ const paymentSchema = new mongoose.Schema(
     },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Invoice'
+      ref: 'Invoice',
+      required: [true, 'Payment must be recorded against an invoice']
     },
     amount: {
       type: Number,
@@ -31,24 +36,30 @@ const paymentSchema = new mongoose.Schema(
       default: 'USD',
       uppercase: true
     },
-    status: {
-      type: String,
-      required: true,
-      enum: ['succeeded', 'pending', 'failed', 'refunded'],
-      default: 'succeeded'
-    },
     paymentMethod: {
       type: String,
       required: true,
-      default: 'Credit Card'
+      enum: ['cash', 'bank_transfer', 'upi', 'card', 'other']
     },
-    cardLast4: {
+    notes: {
       type: String,
-      default: '4242'
+      trim: true,
+      maxlength: 1000
     },
-    paidAt: {
+    paymentDate: {
       type: Date,
       default: Date.now
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ['completed', 'pending', 'failed', 'refunded'],
+      default: 'completed'
+    },
+    recordedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   },
   {
@@ -57,10 +68,10 @@ const paymentSchema = new mongoose.Schema(
 );
 
 // Indexes for revenue aggregations
-paymentSchema.index({ status: 1, paidAt: 1, amount: 1 });
+paymentSchema.index({ status: 1, paymentDate: 1, amount: 1 });
 paymentSchema.index({ customerId: 1, status: 1 });
+paymentSchema.index({ invoiceId: 1, paymentDate: -1 });
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
 module.exports = Payment;
-

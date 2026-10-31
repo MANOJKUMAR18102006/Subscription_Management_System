@@ -256,6 +256,8 @@ const seedDB = async () => {
       planName: 'Enterprise Pro',
       billingCycle: 'monthly',
       amount: 2560,
+      amountPaid: 2560,
+      balanceDue: 0,
       currency: 'INR',
       status: 'active',
       startDate: new Date(now.getFullYear(), now.getMonth() - 3, 1),
@@ -370,6 +372,8 @@ const seedDB = async () => {
       customerId: customerPrimary._id,
       subscriptionId: subPrimary._id,
       amount: 2560,
+      amountPaid: 2560,
+      balanceDue: 0,
       currency: 'INR',
       status: 'paid',
       dueDate: new Date(now.getFullYear(), now.getMonth(), 15),
@@ -383,6 +387,8 @@ const seedDB = async () => {
       customerId: custAcme._id,
       subscriptionId: subAcme._id,
       amount: 4600,
+      amountPaid: 4600,
+      balanceDue: 0,
       currency: 'INR',
       status: 'paid',
       dueDate: new Date(now.getFullYear(), now.getMonth(), 10),
@@ -396,6 +402,8 @@ const seedDB = async () => {
       customerId: custNexus._id,
       subscriptionId: subNexus._id,
       amount: 1400,
+      amountPaid: 0,
+      balanceDue: 1400,
       currency: 'INR',
       status: 'overdue',
       dueDate: new Date(now.getFullYear(), now.getMonth() - 1, 28),
@@ -408,6 +416,8 @@ const seedDB = async () => {
       customerId: customerPrimary._id,
       subscriptionId: subPrimary._id,
       amount: 2560,
+      amountPaid: 0,
+      balanceDue: 2560,
       currency: 'INR',
       status: 'pending',
       dueDate: new Date(now.getFullYear(), now.getMonth() + 1, 15),
@@ -419,42 +429,45 @@ const seedDB = async () => {
 
     // 6. Create Payments
     await Payment.create({
-      transactionId: 'TXN-2026-9001',
+      paymentReference: 'PAY-2026-9001',
+      transactionReference: 'TXN-2026-9001',
       customerId: customerPrimary._id,
       invoiceId: invPrimaryPaid2._id,
       subscriptionId: subPrimary._id,
       amount: 2560,
       currency: 'INR',
-      status: 'succeeded',
-      paymentMethod: 'UPI / Visa •••• 4242',
-      cardLast4: '4242',
-      paidAt: new Date()
+      status: 'completed',
+      paymentMethod: 'upi',
+      paymentDate: new Date(),
+      recordedBy: admin._id
     });
 
     await Payment.create({
-      transactionId: 'TXN-2026-8942',
+      paymentReference: 'PAY-2026-8942',
+      transactionReference: 'TXN-2026-8942',
       customerId: custAcme._id,
       invoiceId: invAcmePaid._id,
       subscriptionId: subAcme._id,
       amount: 4600,
       currency: 'INR',
-      status: 'succeeded',
-      paymentMethod: 'Mastercard •••• 5510',
-      cardLast4: '5510',
-      paidAt: new Date(now.getFullYear(), now.getMonth(), 8)
+      status: 'completed',
+      paymentMethod: 'card',
+      paymentDate: new Date(now.getFullYear(), now.getMonth(), 8),
+      recordedBy: admin._id
     });
 
     await Payment.create({
-      transactionId: 'TXN-2026-9110',
+      paymentReference: 'PAY-2026-9110',
+      transactionReference: 'TXN-2026-9110',
       customerId: custNexus._id,
       invoiceId: invNexusOverdue._id,
       subscriptionId: subNexus._id,
       amount: 1400,
       currency: 'INR',
       status: 'pending',
-      paymentMethod: 'Net Banking / NEFT',
-      cardLast4: 'BANK',
-      paidAt: new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      paymentMethod: 'bank_transfer',
+      paymentDate: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+      recordedBy: admin._id
     });
 
     console.log('[Seed] Seeded Payments');

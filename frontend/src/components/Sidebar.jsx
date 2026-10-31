@@ -39,7 +39,8 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         { label: 'Staff Management', to: '/admin/staff', icon: UserPlus, badge: 'Admin Only' },
         { label: 'User Directory', to: '/admin/users', icon: Users },
         { label: 'Subscriptions Oversight', to: '/admin/subscriptions', icon: Layers },
-        { label: 'Audit Logs', to: '/admin/audit', icon: ClipboardList }
+        { label: 'Audit Logs', to: '/admin/audit', icon: ClipboardList },
+        { label: 'Payments & Receipts', to: '/payments', icon: CreditCard }
       ];
     }
 
@@ -49,7 +50,8 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         { label: 'Products Catalog', to: '/products', icon: Package, badge: 'View Only' },
         { label: 'Subscribers', to: '/staff/subscribers', icon: Users },
         { label: 'Active Subscriptions', to: '/staff/subscriptions', icon: Layers },
-        { label: 'Support Queue', to: '/staff/support', icon: Headphones, badge: 'Daily Ops' }
+        { label: 'Support Queue', to: '/staff/support', icon: Headphones, badge: 'Daily Ops' },
+        { label: 'Payments & Receipts', to: '/payments', icon: CreditCard }
       ];
     }
 
@@ -205,4 +207,3 @@ const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
 };
 
 export default Sidebar;
-

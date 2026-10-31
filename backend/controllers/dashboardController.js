@@ -30,8 +30,8 @@ exports.getAdminDashboard = async (req, res, next) => {
     const revenueAgg = await Payment.aggregate([
       {
         $match: {
-          status: 'succeeded',
-          paidAt: { $gte: startDate, $lte: endDate }
+          status: 'completed',
+          paymentDate: { $gte: startDate, $lte: endDate }
         }
       },
       {
@@ -47,7 +47,7 @@ exports.getAdminDashboard = async (req, res, next) => {
 
     // Lifetime Total Revenue for comparison
     const lifetimeRevenueAgg = await Payment.aggregate([
-      { $match: { status: 'succeeded' } },
+      { $match: { status: 'completed' } },
       { $group: { _id: null, total: { $sum: '$amount' } } }
     ]);
     const lifetimeRevenue = lifetimeRevenueAgg[0]?.total || 0;
@@ -81,7 +81,7 @@ exports.getAdminDashboard = async (req, res, next) => {
       {
         $group: {
           _id: null,
-          totalAmount: { $sum: '$amount' },
+          totalAmount: { $sum: { $ifNull: ['$balanceDue', '$amount'] } },
           count: { $sum: 1 }
         }
       }
@@ -122,7 +122,7 @@ exports.getAdminDashboard = async (req, res, next) => {
     // 9. Recent Payments (Populated with Customer details)
     const recentPayments = await Payment.find()
       .populate('customerId', 'name email company')
-      .sort({ paidAt: -1 })
+      .sort({ paymentDate: -1 })
       .limit(6);
 
     // 10. Revenue Overview Chart: Group succeeded payments by month/year (past 6-12 months)
@@ -134,15 +134,15 @@ exports.getAdminDashboard = async (req, res, next) => {
     const revenueChartAgg = await Payment.aggregate([
       {
         $match: {
-          status: 'succeeded',
-          paidAt: { $gte: sixMonthsAgo }
+          status: 'completed',
+          paymentDate: { $gte: sixMonthsAgo }
         }
       },
       {
         $group: {
           _id: {
-            year: { $year: '$paidAt' },
-            month: { $month: '$paidAt' }
+            year: { $year: '$paymentDate' },
+            month: { $month: '$paymentDate' }
           },
           revenue: { $sum: '$amount' },
           transactions: { $sum: 1 }
@@ -245,13 +245,13 @@ exports.getStaffDashboard = async (req, res, next) => {
     const pendingInvoicesAgg = await Invoice.aggregate([
       {
         $match: {
-          status: 'pending'
+          status: { $in: ['pending', 'partially_paid'] }
         }
       },
       {
         $group: {
           _id: null,
-          totalAmount: { $sum: '$amount' },
+          totalAmount: { $sum: { $ifNull: ['$balanceDue', '$amount'] } },
           count: { $sum: 1 }
         }
       }
@@ -269,7 +269,7 @@ exports.getStaffDashboard = async (req, res, next) => {
       {
         $group: {
           _id: null,
-          totalAmount: { $sum: '$amount' },
+          totalAmount: { $sum: { $ifNull: ['$balanceDue', '$amount'] } },
           count: { $sum: 1 }
         }
       }
@@ -359,13 +359,14 @@ exports.getCustomerDashboard = async (req, res, next) => {
       {
         $match: {
           customerId,
-          status: { $in: ['pending', 'overdue'] }
+          status: { $in: ['pending', 'partially_paid', 'overdue'] },
+          balanceDue: { $gt: 0 }
         }
       },
       {
         $group: {
           _id: null,
-          totalAmount: { $sum: '$amount' },
+          totalAmount: { $sum: { $ifNull: ['$balanceDue', '$amount'] } },
           count: { $sum: 1 }
         }
       }
@@ -378,7 +379,7 @@ exports.getCustomerDashboard = async (req, res, next) => {
       {
         $match: {
           customerId,
-          status: 'succeeded'
+          status: 'completed'
         }
       },
       {
@@ -398,7 +399,7 @@ exports.getCustomerDashboard = async (req, res, next) => {
       .limit(5);
 
     const paymentHistory = await Payment.find({ customerId })
-      .sort({ paidAt: -1 })
+      .sort({ paymentDate: -1 })
       .limit(5);
 
     res.status(200).json({
@@ -427,4 +428,3 @@ exports.getCustomerDashboard = async (req, res, next) => {
     next(error);
   }
 };
-

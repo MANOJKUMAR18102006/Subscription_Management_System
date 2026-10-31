@@ -59,6 +59,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes'));
 
 // Centralized error handling
 app.use(notFound);
@@ -75,4 +76,3 @@ process.on('unhandledRejection', (err) => {
   console.error(`Unhandled Rejection Error: ${err.message}`);
   // Keep server running in dev
 });
-

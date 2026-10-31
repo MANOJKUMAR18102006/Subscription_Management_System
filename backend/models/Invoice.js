@@ -22,6 +22,18 @@ const invoiceSchema = new mongoose.Schema(
       required: [true, 'Invoice amount is required'],
       min: [0, 'Amount cannot be negative']
     },
+    amountPaid: {
+      type: Number,
+      min: 0,
+      default: 0
+    },
+    balanceDue: {
+      type: Number,
+      min: 0,
+      default: function () {
+        return this.amount;
+      }
+    },
     currency: {
       type: String,
       default: 'USD',
@@ -30,7 +42,7 @@ const invoiceSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ['paid', 'pending', 'overdue', 'failed', 'canceled'],
+      enum: ['paid', 'partially_paid', 'pending', 'overdue', 'failed', 'canceled'],
       default: 'pending'
     },
     dueDate: {
@@ -66,4 +78,3 @@ invoiceSchema.index({ createdAt: 1 });
 const Invoice = mongoose.model('Invoice', invoiceSchema);
 
 module.exports = Invoice;
-
